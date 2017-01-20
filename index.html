@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<title>Фитнес-клуб Citrus</title>
+	<link rel="shortcut icon" href="image/favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" type="text/css" href="style/style.css"/>
+	<link rel="stylesheet" href="style/font-awesome.css">
+</head>
+<body>
+	<header class="anchor" id="home">
+		<div class="nav">
+			<div class="logo">
+				<img src="image/logo1.png">
+			</div>
+			<div class="navbar">
+				<ul>
+					<li><a href="#registration">Запись</a></li>
+					<li><a href="#contacts">Контакты</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="content">
+			<div class="parent-top">
+				<div class="centered">
+					<div class="title">
+						<h1>Фитнес-клуб <span>Citrus</span></h1>
+						<p>Территория здоровья</p>
+					</div>
+				</div>	
+			</div>		
+		</div>
+	</header>
+
+	<div class="info anchor" id="registration">
+		<div class="registration">
+			<form id="form-reg" action="send.php" method="POST">
+				<p>Запишись на тренировку</p>
+				<p>и мы Вам перезвоним</p>
+				<input type="text" name="fio" id="fio" placeholder="Ваше имя" required />
+				<input type="text" name="phone" id="phone" placeholder="Ваш номер телефона" required/>
+				<div class="when">
+					<p>Когда планируете прийти?</p>
+					<input type="datetime-local" name="date"/>
+				</div>
+				<input class="dis" id="send-btn" type="submit" value="Заполните поля" disabled="disabled">
+			</form>
+		</div>
+	</div>
+
+	<footer class="anchor" id="contacts">	
+		<div class="container-foot">
+			<div class="about">
+				<p>Наш адрес</p>
+				<p>г. Мариуполь, пр. Строителей, 86а</p>
+				<p>Телефон</p>
+				<p>(067) 289 69 69</p>
+				<p>Мы в соцсетях</p>
+				<div class="society">
+					<a href="https://vk.com/citrus_fitness" target="_blank"><img src="image/vk.bmp" alt="ВКонтакте"></a>
+					<a href="https://www.instagram.com/citrus_fitnes.club/" target="_blank"><img src="image/insta.png" alt="Instagram"></a>
+				</div>
+			</div>	
+			<div class="map">
+				<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4567.945887933331!2d37.52672814558467!3d47.09677940379994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x9e73f271bb84e2e7!2sCitrus!5e0!3m2!1sru!2sua!4v1476622136440" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+			</div>
+		</div>
+	</footer>
+
+	<div class="go_top">
+		<a href="#"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+	</div>
+	
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="lib/jquery.maskedinput.min.js"></script>
+  	<script>
+  	$(function(){
+  		$("#phone").mask("+38(099) 999-99-99");
+  	})
+
+	$(function(f){
+	    var element = f('.nav');
+	    f(window).scroll(function(){
+	        element['fade'+ (f(this).scrollTop() > 100 ? 'Out': 'In')](300);           
+	    });
+	}); 
+
+	$('a[href^="#"]').bind('click.smoothscroll',function (e) {
+	 	e.preventDefault();
+	 	var target = this.hash,
+	 	$target = $(target);
+	 	$('html, body').stop().animate({
+	 		'scrollTop': $target.offset().top
+	 	}, 500, 'swing', function () {
+	 		window.location.hash = target;
+	 	});
+	});
+
+	//Вывожу запись об успешной отправке
+	$(document).ready(function() {
+		$("#form-reg").submit(function() {
+			var form = $(this);
+			var data = form.serialize();
+			$.ajax({
+				url: 'send.php',
+				type: 'POST',
+				data: data,
+				dataType: 'json',
+				success: function(response) {
+					if (response['errors'].length == 0) {
+						$("<div class='modal-form' style='color: #fff;'><p style='font-size: 2.2em;'>Мы получили Вашу заявку</p><p style='font-size: 1.5em;'>В ближайшее время мы Вам перезвоним</p></div>").replaceAll("#form-reg"); 
+						// setTimeout(function(){
+						// 	form.find("input").val('');
+						// 	$(form).replaceAll(".modal-form");
+						// }, 5000);
+					} else {
+						alert(response['errors']);
+					}
+				}
+			});
+			return false;
+		})
+	})
+
+	//скролл по блокам
+	var anchors = [];
+	var currentAnchor = 0;
+	var isAnimating  = false;
+
+	$(function(){
+		//заполняю массив значениями положения блоков
+		function updateAnchors() {
+			anchors = [];
+			$('.anchor').each(function(i, element){
+				anchors.push( $(element).offset().top );
+			});
+		}
+
+		$('body').on('mousewheel', function(e){
+			e.preventDefault();
+			e.stopPropagation();
+			if( isAnimating ) {
+				return false;
+			}
+			isAnimating  = true;
+
+			if(e.originalEvent.wheelDelta >= 0) {
+				currentAnchor--;
+			} else {
+				currentAnchor++;
+			}
+
+			if(currentAnchor < 0 ) {
+				currentAnchor = 0;
+			}else if (currentAnchor > (anchors.length - 1)) {
+				currentAnchor--;
+			}
+			isAnimating  = true;
+			
+			$('html, body').animate({
+				scrollTop: parseInt(anchors[currentAnchor])
+			}, 500, 'swing', function(){
+				isAnimating  = false;
+			});
+		});
+
+		updateAnchors();   
+
+	});
+	
+	$(document).ready(function() {
+		$('#form-reg').keyup(function(event){
+			if ($('#fio').val().length > 1) {
+				$('#send-btn').removeAttr('disabled')
+							  .removeAttr('class')
+							  .attr('value', 'Отправить');
+			} else {
+				$('#send-btn').attr('disabled', 'disabled')
+							  .attr('value', 'Заполните поля')
+							  .attr('class', 'dis');
+				if(event.keyCode == 13) {
+          			event.preventDefault();
+          			return false;
+      			}
+			}			
+		}); 
+	});
+
+	//скролл по кнопке наверх
+	$(function() {
+	  	$(window).scroll(function() {
+	  		if($(this).scrollTop() != 0) {
+	  			$('.go_top').fadeIn();
+	  		} else {
+	  			$('.go_top').fadeOut();
+	  		}
+	  	});
+	  	$('.go_top').click(function() {
+	  		$('body,html').animate({scrollTop:0},700);
+	  		currentAnchor = 0;
+	  	});
+	 });
+
+	</script>
+</body>
+</html>
