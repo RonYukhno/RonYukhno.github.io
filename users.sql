@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `request_number` (
   `date_request` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `name` varchar(100) NOT NULL,
   `phone` varchar(13) NOT NULL,
-  `date` timestamp NULL DEFAULT NULL,
+  `date` varchar(50) DEFAULT NULL,
   `called` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
