@@ -8,7 +8,7 @@
     $fio = trim($fio);
     $phone_d = preg_replace('/\D/','', trim($phone)); //оставляю только числа
 
-    
+	$is_norepeat = true; //для проверки повторной заявки
     $errors = array();
     
     if (preg_match("/\d/", $fio))
@@ -21,9 +21,7 @@
             //если дата из бд больше чем вчерашняя
             $is_norepeat = false;
             array_push($errors, "Сегодня Вы уже подали заявку");
-        } else {
-            $is_norepeat = true; //для проверки повторной заявки
-        }  
+        }
     }
     
     if ($is_norepeat) {
